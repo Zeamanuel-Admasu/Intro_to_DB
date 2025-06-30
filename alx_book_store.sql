@@ -1,21 +1,36 @@
-import mysql.connector
-from mysql.connector import errorcode
+CREATE TABLE AUTHORS (
+    AUTHOR_ID INT AUTO_INCREMENT PRIMARY KEY,
+    AUTHOR_NAME VARCHAR(215) NOT NULL
+);
 
-def create_database():
-    try:
-        # Connect without specifying database (to create it)
-        db = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="A12345678!"
-        )
-        cursor = db.cursor()
-        cursor.execute("CREATE DATABASE IF NOT EXISTS alx_book_store")
-        print("Database 'alx_book_store' created successfully!")
-        cursor.close()
-        db.close()
-    except mysql.connector.Error as err:
-        print(f"Error: {err}")
+CREATE TABLE BOOKS (
+    BOOK_ID INT AUTO_INCREMENT PRIMARY KEY,
+    TITLE VARCHAR(130) NOT NULL,
+    AUTHOR_ID INT,
+    PRICE DOUBLE,
+    PUBLICATION_DATE DATE,
+    FOREIGN KEY (AUTHOR_ID) REFERENCES AUTHORS(AUTHOR_ID)
+);
 
-if __name__ == "__main__":
-    create_database()
+CREATE TABLE CUSTOMERS (
+    CUSTOMER_ID INT AUTO_INCREMENT PRIMARY KEY,
+    CUSTOMER_NAME VARCHAR(215) NOT NULL,
+    EMAIL VARCHAR(215),
+    ADDRESS TEXT
+);
+
+CREATE TABLE ORDERS (
+    ORDER_ID INT AUTO_INCREMENT PRIMARY KEY,
+    CUSTOMER_ID INT,
+    ORDER_DATE DATE,
+    FOREIGN KEY (CUSTOMER_ID) REFERENCES CUSTOMERS(CUSTOMER_ID)
+);
+
+CREATE TABLE ORDER_DETAILS (
+    ORDERDETAILID INT AUTO_INCREMENT PRIMARY KEY,
+    ORDER_ID INT,
+    BOOK_ID INT,
+    QUANTITY DOUBLE,
+    FOREIGN KEY (ORDER_ID) REFERENCES ORDERS(ORDER_ID),
+    FOREIGN KEY (BOOK_ID) REFERENCES BOOKS(BOOK_ID)
+);
